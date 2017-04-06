@@ -3,14 +3,16 @@ MOD=demo.so
 MODSRC=$(wildcard *.cpp)
 MODOBJ=$(patsubst %.cpp,%.o,$(MODSRC))
 
+NGINX_INSTALL_DIR=/home/ubuntu1610/nginx
 
 CC=gcc
-CXXFLAGS+=-O3 -fPIC -Wall -I/home/ubuntu1610/nginx/include
-LDLIBS+=-lPocoNet -lPocoFoundation
+CXXFLAGS+=-O3 -fPIC -Wall -I$(NGINX_INSTALL_DIR)/include
+LDLIBS+=-lPocoFoundation
 LDLIBS+=`pkg-config --libs opencv`
 LDFLAGS+=-shared
 
-NGINX_MODULE_DIR=/home/ubuntu1610/nginx/cpp
+
+
 
 
 all:$(MOD)
@@ -24,5 +26,5 @@ clean:
 
 install:
 	test -d $(NGINX_MODULE_DIR) || mkdir -p $(NGINX_MODULE_DIR)
-	install demo.so $(NGINX_MODULE_DIR)
-	cp route.conf $(NGINX_MODULE_DIR)
+	install demo.so route.conf $(NGINX_INSTALL_DIR)/cpp
+	install upload.html $(NGINX_INSTALL_DIR)/html
