@@ -4,6 +4,8 @@
 #include "view.hpp"
 #include <Poco/Format.h>
 #include <Poco/Path.h>
+#include <Poco/DeflatingStream.h>
+#include <sstream>
 #include <opencv2/opencv.hpp>
 
 namespace nginx {
@@ -138,6 +140,19 @@ namespace nginx {
                 res.headers.find("Content-Type")->second = "text/plain;charset=UTF-8";
                 res.content = "Not found upload field.";
             }
+        }
+
+    };
+    
+    class gzip :public view{
+        void handler(const request& req, response& res){
+            res.headers.insert(std::make_pair("Content-Encoding","gzip"));
+            std::ostringstream os;
+            Poco::DeflatingOutputStream gzipper(os,Poco::DeflatingStreamBuf::STREAM_GZIP);
+            gzipper << "hello,world";
+            gzipper.close();
+            res.content = os.str();
+            
         }
 
     };
