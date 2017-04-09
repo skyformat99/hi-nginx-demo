@@ -11,8 +11,10 @@ POCO_EXPORT_CLASS(nginx::empty)
 POCO_EXPORT_CLASS(nginx::ses)
 POCO_EXPORT_CLASS(nginx::thum)
 POCO_EXPORT_CLASS(nginx::gzip)
-
-
+POCO_EXPORT_CLASS(nginx::redirect)
+POCO_EXPORT_CLASS(nginx::error)
+        
+        
 POCO_END_MANIFEST
 
 

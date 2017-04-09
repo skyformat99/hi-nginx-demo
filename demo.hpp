@@ -156,6 +156,21 @@ namespace nginx {
         }
 
     };
+    
+    class redirect:public view{
+        void handler(const request& req, response& res){
+            res.status=302;
+            res.headers.insert(std::make_pair("Location","/hello"));
+        }
+
+    };
+        class error:public view{
+        void handler(const request& req, response& res){
+            res.status=404;
+            res.content="404 Not found";
+        }
+
+    };
 
 
 }
