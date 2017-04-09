@@ -8,7 +8,7 @@
 #include <sstream>
 #include <opencv2/opencv.hpp>
 
-namespace nginx {
+namespace hi {
 
     class hello : public view {
     public:
@@ -22,11 +22,11 @@ namespace nginx {
         void handler(const request& req, response& res) {
             res.headers.find("Content-Type")->second = "text/plain;charset=UTF-8";
             std::string key("test");
-            if (res.nginx_cache->has(key)) {
-                res.content = res.nginx_cache->get(key)->value();
+            if (res.cache->has(key)) {
+                res.content = res.cache->get(key)->value();
             } else {
                 res.content = "hello,world";
-                res.nginx_cache->add(key, nginx::cache_string(res.content, 60 * 1000));
+                res.cache->add(key, hi::cache_string(res.content, 60 * 1000));
             }
             res.status = 200;
 
@@ -48,16 +48,16 @@ namespace nginx {
             res.headers.find("Content-Type")->second = "text/plain;charset=UTF-8";
             res.content.clear();
 
-            if (res.nginx_session->find("test") == res.nginx_session->end()) {
-                res.nginx_session->insert(std::make_pair("test", 1));
+            if (res.session->find("test") == res.session->end()) {
+                res.session->insert(std::make_pair("test", 1));
             } else {
                 int tmp;
-                res.nginx_session->at("test").convert<int>(tmp);
-                res.nginx_session->at("test") = ++tmp;
+                res.session->at("test").convert<int>(tmp);
+                res.session->at("test") = ++tmp;
             }
-            res.cookies["test"] = res.nginx_session->at("test").toString();
+            res.cookies["test"] = res.session->at("test").toString();
 
-            for (auto & item : *res.nginx_session) {
+            for (auto & item : *res.session) {
                 res.content.append(Poco::format("session:\r\n%[0]s = %[1]s\r\n", item.first, item.second.toString()));
             }
             for (auto & item : req.cookies) {
