@@ -94,7 +94,7 @@ namespace nginx {
 
         void handler(const request& req, response& res) {
             res.headers.find("Content-Type")->second = "text/plain;charset=UTF-8";
-
+            res.content.clear();
             res.status = 200;
             res.content.append("head data\r\n");
             for (auto &item : req.headers) {
