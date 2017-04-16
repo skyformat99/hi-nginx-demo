@@ -3,12 +3,11 @@ MOD=demo.so
 MODSRC=$(wildcard *.cpp)
 MODOBJ=$(patsubst %.cpp,%.o,$(MODSRC))
 
-NGINX_INSTALL_DIR=/usr/local/hi
+NGINX_INSTALL_DIR=/home/centos7/hi
 
 CC=g++ 
 CXXFLAGS+=-O3 -std=c++11 -fPIC -Wall -I$(NGINX_INSTALL_DIR)/include
 LDLIBS+=-lPocoFoundation
-LDLIBS+=`pkg-config --libs opencv`
 LDFLAGS+=-shared
 
 
@@ -26,5 +25,5 @@ clean:
 
 install:
 	test -d $(NGINX_MODULE_DIR) || mkdir -p $(NGINX_MODULE_DIR)
-	install demo.so route.conf $(NGINX_INSTALL_DIR)/cpp
+	install demo.so $(NGINX_INSTALL_DIR)/cpp
 	install upload.html $(NGINX_INSTALL_DIR)/html

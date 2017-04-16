@@ -2,67 +2,21 @@
 #define DEMO_HPP
 
 #include "view.hpp"
+#include "form.hpp"
+#include <sstream>
 #include <Poco/Format.h>
 #include <Poco/Path.h>
 #include <Poco/DeflatingStream.h>
-#include <sstream>
-#include <opencv2/opencv.hpp>
+
 
 namespace hi {
 
     class hello : public view {
     public:
 
-        hello() {
-        }
-
-        ~hello() {
-        }
-
-        void handler(const request& req, response& res) {
+        void handler(request& req, response& res) {
             res.headers.find("Content-Type")->second = "text/plain;charset=UTF-8";
-            std::string key("test");
-            if (res.cache->has(key)) {
-                res.content = res.cache->get(key)->value();
-            } else {
-                res.content = "hello,world";
-                res.cache->add(key, hi::cache_string(res.content, 60 * 1000));
-            }
-            res.status = 200;
-
-
-        }
-
-    };
-
-    class ses : public view {
-    public:
-
-        ses() {
-        }
-
-        ~ses() {
-        }
-
-        void handler(const request& req, response& res) {
-            res.headers.find("Content-Type")->second = "text/plain;charset=UTF-8";
-            res.content.clear();
-
-            if (res.session->find("test") == res.session->end()) {
-                res.session->insert(std::make_pair("test", 1));
-            } else {
-                int tmp;
-                res.session->at("test").convert<int>(tmp);
-                res.session->at("test") = ++tmp;
-            }
-            res.cookies["test"] = res.session->at("test").toString();
-
-            for (auto & item : *res.session) {
-                res.content.append(Poco::format("session:\r\n%[0]s = %[1]s\r\n", item.first, item.second.toString()));
-            }
-            for (auto & item : req.cookies) {
-                res.content.append(Poco::format("cookies:\r\n%[0]s = %[1]s\r\n", item.first, item.second));
-            }
+            res.content = "hello,world";
             res.status = 200;
         }
 
@@ -71,13 +25,7 @@ namespace hi {
     class empty : public view {
     public:
 
-        empty() {
-        }
-
-        ~empty() {
-        }
-
-        void handler(const request& req, response& res) {
+        void handler(request& req, response& res) {
 
         }
 
@@ -86,16 +34,27 @@ namespace hi {
     class form : public view {
     public:
 
-        form() {
-        }
-
-        ~form() {
-        }
-
-        void handler(const request& req, response& res) {
+        void handler(request& req, response& res) {
             res.headers.find("Content-Type")->second = "text/plain;charset=UTF-8";
             res.content.clear();
             res.status = 200;
+            const std::string& method = req.headers["method"];
+            if (method == "GET") {
+                hi::set_get_form(req.headers, req.form);
+            }
+            if (method == "POST" || method == "PUT") {
+                std::string content_type = req.headers.find("Content-Type")->second;
+                if (content_type.find("multipart/form-data") != std::string::npos) {
+                    std::string allow_field = "upload"
+                            , allow_type = "image/jpeg|image/png"
+                            , upload_dir = Poco::Path::current() + "html/upload";
+                    double upload_size = 1048567;
+                    hi::upload_handler upload_handler(allow_field, allow_type, upload_dir, upload_size);
+                    hi::set_post_or_put_form(req.form["temp_body_file_path"], req.headers, &upload_handler, req.form);
+                } else if (content_type.find("application/x-www-form-urlencoded") != std::string::npos) {
+                    hi::set_post_or_put_form(req.form["temp_body_file_path"], req.headers, 0, req.form);
+                }
+            }
             res.content.append("head data\r\n");
             for (auto &item : req.headers) {
                 res.content.append(Poco::format("%[0]s\t=\t%[1]s\r\n", item.first, item.second));
@@ -104,70 +63,38 @@ namespace hi {
             for (auto & item : req.form) {
                 res.content.append(Poco::format("%[0]s\t=\t%[1]s\r\n", item.first, item.second));
             }
-            res.content.append("route data\r\n");
-            for (auto & item : req.route) {
-                res.content.append(Poco::format("%[0]s\r\n", item));
-            }
         }
 
     };
 
-    class thum : public view {
-    public:
+    class gzip : public view {
 
-        thum() {
-        }
-
-        ~thum() {
-        }
-
-        void handler(const request& req, response& res) {
-            if (req.form.find("upload") != req.form.end()) {
-                const std::string& upload_dir = req.headers.at("cpp_upload_dir");
-                Poco::Path src_web_path(req.form.at("upload")),
-                        src_real_path(upload_dir + src_web_path.toString());
-                Poco::Path des_web_path(src_web_path.parent().toString() + src_web_path.getBaseName() + "-thum." + src_web_path.getExtension())
-                        , des_real_path(upload_dir + des_web_path.toString());
-
-                cv::Mat src = cv::imread(src_real_path.toString());
-                cv::resize(src, src, cv::Size(src.cols / 3, src.rows / 3), 0, 0, CV_INTER_LINEAR);
-                if (cv::imwrite(des_real_path.toString(), src)) {
-                    res.content = Poco::format("<img src='%[0]s' />", "/upload" + des_web_path.toString());
-                } else {
-                    res.content = Poco::format("<p>%[0]s</p>", des_real_path.toString());
-                }
-            } else {
-                res.headers.find("Content-Type")->second = "text/plain;charset=UTF-8";
-                res.content = "Not found upload field.";
-            }
-        }
-
-    };
-    
-    class gzip :public view{
-        void handler(const request& req, response& res){
-            res.headers.insert(std::make_pair("Content-Encoding","gzip"));
+        void handler(request& req, response& res) {
+            res.headers.insert(std::make_pair("Content-Encoding", "gzip"));
             std::ostringstream os;
-            Poco::DeflatingOutputStream gzipper(os,Poco::DeflatingStreamBuf::STREAM_GZIP);
+            Poco::DeflatingOutputStream gzipper(os, Poco::DeflatingStreamBuf::STREAM_GZIP);
             gzipper << "hello,world";
             gzipper.close();
             res.content = os.str();
-            
+
         }
 
     };
-    
-    class redirect:public view{
-        void handler(const request& req, response& res){
-            res.status=302;
-            res.headers.insert(std::make_pair("Location","/hello"));
+
+    class redirect : public view {
+
+        void handler(request& req, response& res) {
+            res.status = 302;
+            res.headers.insert(std::make_pair("Location", "/hello"));
         }
 
     };
-        class error:public view{
-        void handler(const request& req, response& res){
-            res.status=404;
-            res.content="404 Not found";
+
+    class error : public view {
+
+        void handler(request& req, response& res) {
+            res.status = 404;
+            res.content = "404 Not found";
         }
 
     };
