@@ -7,7 +7,7 @@ NGINX_INSTALL_DIR=/home/centos7/hi
 
 CC=g++ 
 CXXFLAGS+=-O3 -std=c++11 -fPIC -Wall -I$(NGINX_INSTALL_DIR)/include
-LDLIBS+=-lPocoFoundation
+LDLIBS+= -lPocoNet -lPocoFoundation
 LDFLAGS+=-shared
 
 

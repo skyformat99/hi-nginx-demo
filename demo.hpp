@@ -3,6 +3,7 @@
 
 #include "view.hpp"
 #include "form.hpp"
+#include "cookie.hpp"
 #include <sstream>
 #include <Poco/Format.h>
 #include <Poco/Path.h>
@@ -26,6 +27,12 @@ namespace hi {
     public:
 
         void handler(request& req, response& res) {
+            std::map<std::string, std::string> cookies;
+            hi::get_input_cookies(req.headers, cookies);
+            if (cookies.find("SESSION") == cookies.end()) {
+                cookies["SESSION"] = "123456";
+                hi::set_output_cookies(cookies, res.headers);
+            }
 
         }
 
@@ -38,11 +45,12 @@ namespace hi {
             res.headers.find("Content-Type")->second = "text/plain;charset=UTF-8";
             res.content.clear();
             res.status = 200;
-            const std::string& method = req.headers["method"];
-            if (method == "GET") {
-                hi::set_get_form(req.headers, req.form);
+            std::map<std::string, std::string> form;
+
+            if (req.method == "GET") {
+                hi::set_get_form(req, form);
             }
-            if (method == "POST" || method == "PUT") {
+            if (req.method == "POST" || req.method == "PUT") {
                 std::string content_type = req.headers.find("Content-Type")->second;
                 if (content_type.find("multipart/form-data") != std::string::npos) {
                     std::string allow_field = "upload"
@@ -50,9 +58,9 @@ namespace hi {
                             , upload_dir = Poco::Path::current() + "html/upload";
                     double upload_size = 1048567;
                     hi::upload_handler upload_handler(allow_field, allow_type, upload_dir, upload_size);
-                    hi::set_post_or_put_form(req.form["temp_body_file_path"], req.headers, &upload_handler, req.form);
+                    hi::set_post_or_put_form(req, &upload_handler, form);
                 } else if (content_type.find("application/x-www-form-urlencoded") != std::string::npos) {
-                    hi::set_post_or_put_form(req.form["temp_body_file_path"], req.headers, 0, req.form);
+                    hi::set_post_or_put_form(req, 0, form);
                 }
             }
             res.content.append("head data\r\n");
@@ -60,9 +68,10 @@ namespace hi {
                 res.content.append(Poco::format("%[0]s\t=\t%[1]s\r\n", item.first, item.second));
             }
             res.content.append("form data\r\n");
-            for (auto & item : req.form) {
+            for (auto & item : form) {
                 res.content.append(Poco::format("%[0]s\t=\t%[1]s\r\n", item.first, item.second));
             }
+            res.content.append(Poco::format("%[0]s-%[1]s-%[2]s", req.client, req.method, req.uri));
         }
 
     };
