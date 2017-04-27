@@ -1,30 +1,27 @@
-MOD=demo.so
-
 MODSRC=$(wildcard *.cpp)
 MODOBJ=$(patsubst %.cpp,%.o,$(MODSRC))
+MODLIB=$(MODSRC:%.cpp=%.so)
 
 NGINX_INSTALL_DIR=/home/centos7/nginx
 
 CC=g++ 
 CXXFLAGS+=-O3 -std=c++11 -fPIC -Wall -I$(NGINX_INSTALL_DIR)/include
 LDLIBS+= -lPocoNet -lPocoFoundation
-LDFLAGS+=-shared
+LDFLAGS+=-shared 
 
 
 
+all:$(MODLIB)
 
-
-all:$(MOD)
-
-$(MOD):$(MODOBJ)
-	$(CC) -o $@ $^ $(CXXFLAGS) $(LDLIBS) $(LDFLAGS)
+%.so: %.cpp
+	g++ $(CXXFLAGS) $(LDFLAGS)  $(LDLIBS) -o $@ $< 
 
 clean:
-	rm -f  $(MODOBJ) $(MOD)
+	rm -f  $(MODOBJ) $(MODLIB)
 
 
 install:
 	test -d $(NGINX_MODULE_DIR) || mkdir -p $(NGINX_MODULE_DIR)
-	install demo.so $(NGINX_INSTALL_DIR)/hi
+	install $(MODLIB) $(NGINX_INSTALL_DIR)/hi
 	install demo.conf $(NGINX_INSTALL_DIR)/conf
 	install upload.html $(NGINX_INSTALL_DIR)/html

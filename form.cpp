@@ -1,42 +1,9 @@
-#ifndef DEMO_HPP
-#define DEMO_HPP
-
 #include "view.hpp"
 #include "form.hpp"
-#include "cookie.hpp"
 #include <sstream>
-#include <Poco/Format.h>
-#include <Poco/Path.h>
-#include <Poco/DeflatingStream.h>
 
 
 namespace hi {
-
-    class hello : public view {
-    public:
-
-        void handler(request& req, response& res) {
-            res.headers.find("Content-Type")->second = "text/plain;charset=UTF-8";
-            res.content = "hello,world";
-            res.status = 200;
-        }
-
-    };
-
-    class empty : public view {
-    public:
-
-        void handler(request& req, response& res) {
-            std::map<std::string, std::string> cookies;
-            hi::get_input_cookies(req.headers, cookies);
-            if (cookies.find("SESSION") == cookies.end()) {
-                cookies["SESSION"] = "123456";
-                hi::set_output_cookies(cookies, res.headers);
-            }
-
-        }
-
-    };
 
     class form : public view {
     public:
@@ -76,40 +43,12 @@ namespace hi {
 
     };
 
-    class gzip : public view {
-
-        void handler(request& req, response& res) {
-            res.headers.insert(std::make_pair("Content-Encoding", "gzip"));
-            std::ostringstream os;
-            Poco::DeflatingOutputStream gzipper(os, Poco::DeflatingStreamBuf::STREAM_GZIP);
-            gzipper << "hello,world";
-            gzipper.close();
-            res.content = os.str();
-
-        }
-
-    };
-
-    class redirect : public view {
-
-        void handler(request& req, response& res) {
-            res.status = 302;
-            res.headers.insert(std::make_pair("Location", "/hello"));
-        }
-
-    };
-
-    class error : public view {
-
-        void handler(request& req, response& res) {
-            res.status = 404;
-            res.content = "404 Not found";
-        }
-
-    };
-
-
 }
 
+extern "C" hi::view* create() {
+    return new hi::form();
+}
 
-#endif /* DEMO_HPP */
+extern "C" void destroy(hi::view* p) {
+    delete p;
+}
