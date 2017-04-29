@@ -1,7 +1,7 @@
-#include "view.hpp"
+#include "servlet.hpp"
 
 namespace hi{
-    class redirect : public view {
+    class redirect : public servlet {
 
         void handler(request& req, response& res) {
             res.status = 302;
@@ -11,10 +11,10 @@ namespace hi{
     };
 }
 
-extern "C" hi::view* create() {
+extern "C" hi::servlet* create() {
     return new hi::redirect();
 }
 
-extern "C" void destroy(hi::view* p) {
+extern "C" void destroy(hi::servlet* p) {
     delete p;
 }

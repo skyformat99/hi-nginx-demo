@@ -1,10 +1,10 @@
-#include "view.hpp"
+#include "servlet.hpp"
 #include "cookie.hpp"
 
 
 namespace hi {
 
-    class empty : public view {
+    class empty : public servlet {
     public:
 
         void handler(request& req, response& res) {
@@ -21,11 +21,11 @@ namespace hi {
 
 }
 
-extern "C" hi::view* create() {
+extern "C" hi::servlet* create() {
     return new hi::empty();
 }
 
-extern "C" void destroy(hi::view* p) {
+extern "C" void destroy(hi::servlet* p) {
     delete p;
 }
 

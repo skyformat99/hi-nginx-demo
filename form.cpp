@@ -1,11 +1,11 @@
-#include "view.hpp"
+#include "servlet.hpp"
 #include "form.hpp"
 #include <sstream>
 
 
 namespace hi {
 
-    class form : public view {
+    class form : public servlet {
     public:
 
         void handler(request& req, response& res) {
@@ -45,10 +45,10 @@ namespace hi {
 
 }
 
-extern "C" hi::view* create() {
+extern "C" hi::servlet* create() {
     return new hi::form();
 }
 
-extern "C" void destroy(hi::view* p) {
+extern "C" void destroy(hi::servlet* p) {
     delete p;
 }

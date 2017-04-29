@@ -1,9 +1,9 @@
-#include "view.hpp"
+#include "servlet.hpp"
 
 
 namespace hi {
 
-    class hello : public view {
+    class hello : public servlet {
     public:
 
         void handler(request& req, response& res) {
@@ -15,10 +15,10 @@ namespace hi {
     };
 }
 
-extern "C" hi::view* create() {
+extern "C" hi::servlet* create() {
     return new hi::hello();
 }
 
-extern "C" void destroy(hi::view* p) {
+extern "C" void destroy(hi::servlet* p) {
     delete p;
 }

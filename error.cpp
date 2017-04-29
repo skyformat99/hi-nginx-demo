@@ -1,7 +1,7 @@
-#include "view.hpp"
+#include "servlet.hpp"
 
 namespace hi{
-    class error : public view {
+    class error : public servlet {
 
         void handler(request& req, response& res) {
             res.status = 404;
@@ -11,10 +11,10 @@ namespace hi{
     };
 }
 
-extern "C" hi::view* create() {
+extern "C" hi::servlet* create() {
     return new hi::error();
 }
 
-extern "C" void destroy(hi::view* p) {
+extern "C" void destroy(hi::servlet* p) {
     delete p;
 }
