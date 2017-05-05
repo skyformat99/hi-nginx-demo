@@ -1,5 +1,4 @@
 #include "servlet.hpp"
-#include "form.hpp"
 #include <Poco/NumericString.h>
 #include <Poco/NumberFormatter.h>
 
@@ -9,17 +8,15 @@ namespace hi {
 
         void handler(request& req, response& res) {
             if (req.method == "GET") {
-                std::map<std::string, std::string> form;
-                hi::set_get_form(req, form);
-                if (form.find("a") != form.end()
-                        && form.find("b") != form.end()
-                        && form.find("m") != form.end()) {
+                if (req.form.find("a") != req.form.end()
+                        && req.form.find("b") != req.form.end()
+                        && req.form.find("m") != req.form.end()) {
                     res.headers.find("Content-Type")->second = "text/plain;charset=UTF-8";
                     res.content.clear();
                     res.status = 200;
-                    double a = Poco::strToDouble(form["a"].c_str())
-                            , b = Poco::strToDouble(form["b"].c_str());
-                    const std::string& m = form["m"];
+                    double a = Poco::strToDouble(req.form["a"].c_str())
+                            , b = Poco::strToDouble(req.form["b"].c_str());
+                    const std::string& m = req.form["m"];
 
                     if (m == "add") {
                         res.content = Poco::NumberFormatter::format(a + b);
@@ -30,7 +27,7 @@ namespace hi {
                     } else if (m == "div") {
                         res.content = Poco::NumberFormatter::format(a / b);
                     } else {
-                        res.content = form["m"] + " method is not support.";
+                        res.content = m + " method is not support.";
                     }
 
                 }
