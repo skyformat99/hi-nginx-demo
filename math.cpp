@@ -1,6 +1,5 @@
 #include "servlet.hpp"
-#include <Poco/NumericString.h>
-#include <Poco/NumberFormatter.h>
+#include <boost/lexical_cast.hpp>
 
 namespace hi {
 
@@ -14,18 +13,18 @@ namespace hi {
                     res.headers.find("Content-Type")->second = "text/plain;charset=UTF-8";
                     res.content.clear();
                     res.status = 200;
-                    double a = Poco::strToDouble(req.form["a"].c_str())
-                            , b = Poco::strToDouble(req.form["b"].c_str());
+                    double a = boost::lexical_cast<double>(req.form["a"])
+                            , b = boost::lexical_cast<double>(req.form["b"]);
                     const std::string& m = req.form["m"];
 
                     if (m == "add") {
-                        res.content = Poco::NumberFormatter::format(a + b);
+                        res.content = boost::lexical_cast<std::string>(a + b);
                     } else if (m == "sub") {
-                        res.content = Poco::NumberFormatter::format(a - b);
+                        res.content = boost::lexical_cast<std::string>(a - b);
                     } else if (m == "multi") {
-                        res.content = Poco::NumberFormatter::format(a * b);
+                        res.content = boost::lexical_cast<std::string>(a * b);
                     } else if (m == "div") {
-                        res.content = Poco::NumberFormatter::format(a / b);
+                        res.content = boost::lexical_cast<std::string>(a / b);
                     } else {
                         res.content = m + " method is not support.";
                     }
