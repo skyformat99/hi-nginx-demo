@@ -21,6 +21,5 @@ clean:
 
 
 install:
-	test -d $(NGINX_MODULE_DIR) || mkdir -p $(NGINX_MODULE_DIR)
 	install $(MODLIB) $(NGINX_INSTALL_DIR)/hi
 	install demo.conf $(NGINX_INSTALL_DIR)/conf
