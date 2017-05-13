@@ -1,25 +1,11 @@
-MODSRC=$(wildcard *.cpp)
-MODOBJ=$(patsubst %.cpp,%.o,$(MODSRC))
-MODLIB=$(MODSRC:%.cpp=%.so)
-
-NGINX_INSTALL_DIR=/home/centos7/nginx
-
-CC=g++ 
-CXXFLAGS+=-O3 -std=c++11 -fPIC -Wall -I$(NGINX_INSTALL_DIR)/include
-LDLIBS+=
-LDFLAGS+=-shared 
+PROJECT=hello empty form math error redirect
 
 
-
-all:$(MODLIB)
-
-%.so: %.cpp
-	g++ $(CXXFLAGS) $(LDFLAGS)  $(LDLIBS) -o $@ $< 
+all:$(PROJECT)
+	for i in $(PROJECT);do cd $$i && make && cd .. ;done
 
 clean:
-	rm -f  $(MODOBJ) $(MODLIB)
-
+	for i in $(PROJECT);do cd $$i && make clean && cd .. ;done
 
 install:
-	install $(MODLIB) $(NGINX_INSTALL_DIR)/hi
-	install demo.conf $(NGINX_INSTALL_DIR)/conf
+	for i in $(PROJECT);do cd $$i && make install && cd .. ;done
