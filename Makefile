@@ -1,4 +1,4 @@
-PROJECT=hello empty form math error redirect
+PROJECT=hello empty form math error redirect session
 
 
 all:$(PROJECT)
