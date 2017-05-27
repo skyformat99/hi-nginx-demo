@@ -25,7 +25,11 @@ namespace hi {
                     this->REDIS->lpush(lkey,{"0"});
                     this->REDIS->expire(lkey, 300);
                 } else {
-                    j = boost::lexical_cast<long>(this->REDIS->lpop(lkey)) + 1;
+                    if (this->REDIS->llen(lkey) > 1) {
+                        j = boost::lexical_cast<long>(this->REDIS->lpop(lkey)) + 1;
+                    } else {
+                        ++j;
+                    }
                     this->REDIS->lpush(lkey,{boost::lexical_cast<std::string>(j)});
                 }
             }
