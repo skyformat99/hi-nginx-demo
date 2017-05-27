@@ -5,8 +5,8 @@ OBJ=$(patsubst %.cpp,%.o,$(SRC))
 NGINX_INSTALL_DIR=/home/centos7/nginx
 
 CXX=g++ 
-CXXFLAGS+=-O3 -std=c++11 -fPIC -Wall -I$(NGINX_INSTALL_DIR)/include
-LDLIBS+=
+CXXFLAGS+=-O3 -std=c++11 -fPIC -Wall -I$(NGINX_INSTALL_DIR)/include -DUSE_HIREDIS
+LDLIBS+=-lhiredis
 LDFLAGS+=-shared 
 
 all:$(PROJECT)

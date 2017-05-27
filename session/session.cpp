@@ -18,6 +18,10 @@ namespace hi {
                 i = boost::lexical_cast<long>(req.session[key]) + 1;
                 res.session[key] = boost::lexical_cast<std::string>(i);
             }
+#ifdef USE_HIREDIS
+            if (this->REDIS) {
+            }
+#endif
 
             res.content = (boost::format("hello,%1%") % i).str();
             res.status = 200;
