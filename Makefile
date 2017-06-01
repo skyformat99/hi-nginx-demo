@@ -1,4 +1,4 @@
-PROJECT=hello empty form math error redirect session
+PROJECT=hello empty form math error redirect session python
 
 
 all:$(PROJECT)
