@@ -1,4 +1,4 @@
-PROJECT=hello empty form math error redirect session python
+PROJECT=hello empty form math error redirect session python lua
 
 
 all:$(PROJECT)

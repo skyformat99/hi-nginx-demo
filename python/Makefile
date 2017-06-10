@@ -10,5 +10,6 @@ clean:
 	@echo 'ok'
 
 install:
+	test -d $(NGINX_INSTALL_DIR)/python || mkdir -p $(NGINX_INSTALL_DIR)/python
 	install $(SRC) $(NGINX_INSTALL_DIR)/python
 
