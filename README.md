@@ -1,4 +1,4 @@
-# hi_demo
-hi framework demo
+# hi-nginx demo
+hi-nginx demo
 
-[hi framework](https://github.com/webcpp/hi).
+[hi-nginx](https://github.com/webcpp/hi-nginx).
