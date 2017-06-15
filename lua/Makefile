@@ -1,7 +1,9 @@
 
 SRC=$(wildcard *.lua)
 
+ifndef NGINX_INSTALL_DIR
 NGINX_INSTALL_DIR=/home/centos7/nginx
+endif
 
 
 all:

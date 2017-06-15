@@ -2,7 +2,10 @@
 PROJECT=redirect.so
 SRC=$(wildcard *.cpp)
 OBJ=$(patsubst %.cpp,%.o,$(SRC))
+
+ifndef NGINX_INSTALL_DIR
 NGINX_INSTALL_DIR=/home/centos7/nginx
+endif
 
 CC=g++ 
 CXXFLAGS+=-O3 -std=c++11 -fPIC -Wall -I$(NGINX_INSTALL_DIR)/include

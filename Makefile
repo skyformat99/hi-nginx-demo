@@ -1,3 +1,4 @@
+NGINX_INSTALL_DIR=/home/centos7/nginx
 PROJECT=hello empty form math error redirect session python lua
 
 
