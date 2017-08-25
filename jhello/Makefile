@@ -6,7 +6,7 @@ ifndef NGINX_INSTALL_DIR
 NGINX_INSTALL_DIR=/home/centos7/nginx
 endif
 
-JFLAGS = -classpath .:${NGINX_INSTALL_DIR}/java/hi-nginx-java.jar
+JFLAGS = -classpath .:${NGINX_INSTALL_DIR}/java/hi-nginx-java.jar:freemarker.jar
 JC = ${JAVA_HOME}/bin/javac
 
 %.class:%.java
@@ -23,6 +23,9 @@ clean:
 
 install:${OBJ}
 	for i in ${OBJ};do test -d $(NGINX_INSTALL_DIR)/java/. || mkdir -p $(NGINX_INSTALL_DIR)/java/. && install $$i $(NGINX_INSTALL_DIR)/java/$$i ;done
+	test -d ${NGINX_INSTALL_DIR}/java/tpl || mkdir -p ${NGINX_INSTALL_DIR}/java/tpl
+	install jfreemarker.ftl ${NGINX_INSTALL_DIR}/java/tpl
+	install freemarker.jar ${NGINX_INSTALL_DIR}/java
 
 
 
