@@ -22,7 +22,7 @@ clean:
 	rm -f ${OBJ}
 
 install:${OBJ}
-	for i in ${OBJ};do test -d $(NGINX_INSTALL_DIR)/java/. || mkdir -p $(NGINX_INSTALL_DIR)/java/. && install $$i $(NGINX_INSTALL_DIR)/java/$$i ;done
+	for i in ${OBJ};do test -d $(NGINX_INSTALL_DIR)/java/`dirname $$i` || mkdir -p $(NGINX_INSTALL_DIR)/java/`dirname $$i` && install $$i $(NGINX_INSTALL_DIR)/java/$$i ;done
 	test -d ${NGINX_INSTALL_DIR}/java/tpl || mkdir -p ${NGINX_INSTALL_DIR}/java/tpl
 	install jfreemarker.ftl ${NGINX_INSTALL_DIR}/java/tpl
 	install freemarker.jar ${NGINX_INSTALL_DIR}/java
