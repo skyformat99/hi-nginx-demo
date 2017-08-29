@@ -10,7 +10,7 @@ namespace hi {
 
         void handler(request& req, response& res) {
             res.headers.find("Content-Type")->second = "text/plain;charset=UTF-8";
-            std::string key("test_key");
+            std::string key("test");
             long i = 0;
             if (req.session.find(key) == req.session.end()) {
                 res.session[key] = "0";
