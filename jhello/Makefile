@@ -6,7 +6,7 @@ ifndef NGINX_INSTALL_DIR
 NGINX_INSTALL_DIR=/home/centos7/nginx
 endif
 
-JFLAGS = -classpath .:${NGINX_INSTALL_DIR}/java/hi-nginx-java.jar:freemarker.jar
+JFLAGS = -classpath .:${NGINX_INSTALL_DIR}/java/hi-nginx-java.jar:${NGINX_INSTALL_DIR}/java/groovy/groovy-all-2.4.12.jar:freemarker.jar
 JC = ${JAVA_HOME}/bin/javac
 
 %.class:%.java

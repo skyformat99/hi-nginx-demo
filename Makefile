@@ -1,4 +1,4 @@
-export NGINX_INSTALL_DIR=/home/centos7/nginx
+export NGINX_INSTALL_DIR=/usr/local/nginx
 PROJECT=$(shell find . -maxdepth 1 -type d  |grep '^\./[^.]')
 
 all:$(PROJECT)
