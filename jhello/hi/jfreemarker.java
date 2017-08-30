@@ -28,7 +28,7 @@ public class jfreemarker implements hi.servlet {
             Configuration cfg = new Configuration();
             cfg.setEncoding(Locale.CHINA, "utf-8");
             cfg.setDefaultEncoding("utf-8");
-            cfg.setDirectoryForTemplateLoading(new File("/home/centos7/nginx/java/tpl"));
+            cfg.setDirectoryForTemplateLoading(new File("java/tpl"));
             Template template = cfg.getTemplate("jfreemarker.ftl");
 
             Map<String, Object> data = new HashMap<String, Object>();

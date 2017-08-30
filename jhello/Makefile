@@ -3,7 +3,7 @@ SRC=$(shell echo `find . -type f | egrep *.java$$`)
 OBJ=$(patsubst %.java,%.class,$(SRC))
 
 ifndef NGINX_INSTALL_DIR
-NGINX_INSTALL_DIR=/home/centos7/nginx
+NGINX_INSTALL_DIR=/usr/local/nginx
 endif
 
 JFLAGS = -classpath .:${NGINX_INSTALL_DIR}/java/hi-nginx-java.jar:${NGINX_INSTALL_DIR}/java/groovy/groovy-all-2.4.12.jar:freemarker.jar
