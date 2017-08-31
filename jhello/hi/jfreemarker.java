@@ -21,10 +21,6 @@ public class jfreemarker implements hi.servlet {
 
     public void handler(hi.request req, hi.response res) {
         try {
-            
-        } catch (Exception e) {
-        }
-        try {
             Configuration cfg = new Configuration();
             cfg.setEncoding(Locale.CHINA, "utf-8");
             cfg.setDefaultEncoding("utf-8");
