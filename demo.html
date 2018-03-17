@@ -49,10 +49,15 @@
             <li><a href="/jdemo/session" target="_blank">session</a></li>
             <li><a href="/jdemo/md5" target="_blank">md5</a></li>
         </ul>
+        <h3>php demo</h3>
+        <ul>
+            <li><a href="/hello.php" target="_blank" >hello</a></li>
+        </ul>
         <h3>Select files to upload</h3>
-        <form name="upload" method="POST" enctype="multipart/form-data" action="/form">
-            <input type="file" name="upload"><br>
-            <input type="text" name="test_key">
+        <form name="upload" method="POST" enctype="multipart/form-data" action="/demo/form">
+            <input type="file" name="upload_1"><br>
+            <input type="file" name="upload_2"><br>
+            <input type="text" name="test_key" placeholder="test">
             <input type="submit" name="submit" value="Upload">
         </form>
     </body>

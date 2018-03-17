@@ -29,6 +29,8 @@ namespace hi {
                 } else {
                     this->do_error(req, res);
                 }
+            }else if (req.method=="POST" && req.uri=="/demo/form"){
+                this->do_form(req, res);
             }
         }
     private:
