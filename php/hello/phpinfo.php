@@ -1,8 +1,9 @@
 <?php
 
+error_reporting(E_ERROR | E_WARNING | E_PARSE);
 require_once 'hi/servlet.php';
 
-class hello implements servlet {
+class phpinfo implements servlet {
 
     public function __construct() {
         
@@ -13,8 +14,11 @@ class hello implements servlet {
     }
 
     public function handler(\hi\request $req, \hi\response $res) {
-        $res->content = 'hello,world';
+        ob_start();
+        echo phpinfo();
+        $res->content = ob_get_contents();
         $res->status = 200;
+        ob_end_clean();
     }
 
 }

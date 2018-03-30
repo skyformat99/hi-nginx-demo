@@ -1,8 +1,9 @@
 <?php
 
-require_once 'hi/servlet.php';
+error_reporting(E_ERROR | E_WARNING | E_PARSE);
+require_once  'hi/servlet.php';
 
-class hello implements servlet {
+class detail implements servlet {
 
     public function __construct() {
         
@@ -13,7 +14,7 @@ class hello implements servlet {
     }
 
     public function handler(\hi\request $req, \hi\response $res) {
-        $res->content = 'hello,world';
+        $res->content = 'blog detail';
         $res->status = 200;
     }
 
