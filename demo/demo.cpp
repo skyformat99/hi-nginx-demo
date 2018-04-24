@@ -3,7 +3,7 @@
 
 #include <boost/lexical_cast.hpp>
 #include <boost/format.hpp>
-
+#include <boost/regex.hpp>
 
 namespace hi {
 
@@ -12,24 +12,24 @@ namespace hi {
 
         void handler(request& req, response& res) {
             if (req.method == "GET") {
-                if (req.uri == "/demo/hello") {
+                if (boost::regex_match(req.uri, boost::regex("^/hello/?") )) {
                     this->do_hello(req, res);
-                } else if (req.uri == "/demo/empty") {
+                } else if (boost::regex_match(req.uri, boost::regex("^/empty/?"))) {
                     this->do_empty(req, res);
-                } else if (req.uri == "/demo/error") {
+                } else if (boost::regex_match(req.uri, boost::regex("^/error/?") )) {
                     this->do_error(req, res);
-                } else if (req.uri == "/demo/redirect") {
+                } else if (boost::regex_match(req.uri, boost::regex("^/redirect/?"))) {
                     this->do_redirect(req, res);
-                } else if (req.uri == "/demo/form") {
+                } else if (boost::regex_match(req.uri, boost::regex("^/form/?") )) {
                     this->do_form(req, res);
-                } else if (req.uri == "/demo/math") {
+                } else if (boost::regex_match(req.uri, boost::regex("^/math/?"))) {
                     this->do_math(req, res);
-                } else if (req.uri == "/demo/session") {
+                } else if (boost::regex_match(req.uri, boost::regex("^/session/?"))) {
                     this->do_session(req, res);
                 } else {
                     this->do_error(req, res);
                 }
-            }else if (req.method=="POST" && req.uri=="/demo/form"){
+            } else if (req.method == "POST" && boost::regex_match(req.uri, boost::regex("^/form/?"))) {
                 this->do_form(req, res);
             }
         }
@@ -102,7 +102,7 @@ namespace hi {
 
         void do_redirect(request& req, response& res) {
             res.status = 302;
-            res.headers.insert(std::make_pair("Location", "/demo/hello"));
+            res.headers.insert(std::make_pair("Location", "/hello"));
         }
 
         void do_session(request& req, response& res) {

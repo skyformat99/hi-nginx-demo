@@ -9,7 +9,7 @@ endif
 
 CXX=g++ 
 CXXFLAGS+=-O3 -std=c++11 -fPIC -Wall -I$(NGINX_INSTALL_DIR)/include
-LDLIBS+=
+LDLIBS+=-lboost_regex
 LDFLAGS+=-shared 
 
 all:$(PROJECT)
@@ -21,6 +21,6 @@ clean:
 	rm -f  $(OBJ) $(PROJECT)
 
 install:
-	test -d $(NGINX_INSTALL_DIR)/hi || mkdir -p $(NGINX_INSTALL_DIR)/hi
-	install $(PROJECT) $(NGINX_INSTALL_DIR)/hi
+	test -d $(NGINX_INSTALL_DIR)/cpp || mkdir -p $(NGINX_INSTALL_DIR)/cpp
+	install $(PROJECT) $(NGINX_INSTALL_DIR)/cpp
 

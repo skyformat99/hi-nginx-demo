@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class jdemo implements hi.servlet {
 
@@ -13,21 +14,21 @@ public class jdemo implements hi.servlet {
 
     public void handler(hi.request req, hi.response res) {
         if (req.method.equals(new String("GET"))) {
-            if (req.uri.equals(new String("/jdemo/hello"))) {
+            if (Pattern.matches("^/hello/?$", req.uri)) {
                 this.do_hello(req, res);
-            } else if (req.uri.equals(new String("/jdemo/empty"))) {
+            } else if (Pattern.matches("^/empty/?$", req.uri)) {
                 this.do_empty(req, res);
-            } else if (req.uri.equals(new String("/jdemo/error"))) {
+            } else if (Pattern.matches("^/error/?$", req.uri)) {
                 this.do_error(req, res);
-            } else if (req.uri.equals(new String("/jdemo/redirect"))) {
+            } else if (Pattern.matches("^/redirect/?$", req.uri)) {
                 this.do_redirect(req, res);
-            } else if (req.uri.equals(new String("/jdemo/form"))) {
+            } else if (Pattern.matches("^/form/?$", req.uri)) {
                 this.do_form(req, res);
-            } else if (req.uri.equals(new String("/jdemo/math"))) {
+            } else if (Pattern.matches("^/math/?$", req.uri)) {
                 this.do_math(req, res);
-            } else if (req.uri.equals(new String("/jdemo/session"))) {
+            } else if (Pattern.matches("^/session/?$", req.uri)) {
                 this.do_session(req, res);
-            } else if (req.uri.equals(new String("/jdemo/md5"))) {
+            } else if (Pattern.matches("^/md5/?$", req.uri)) {
                 this.do_md5(req, res);
             } else {
                 this.do_error(req, res);
@@ -50,7 +51,7 @@ public class jdemo implements hi.servlet {
     private void do_redirect(hi.request req, hi.response res) {
         res.status = 302;
         ArrayList<String> h = new ArrayList<String>();
-        h.add(new String("/jdemo/hello"));
+        h.add(new String("/hello"));
         res.headers.put(new String("Location"), h);
     }
 
