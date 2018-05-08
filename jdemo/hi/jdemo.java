@@ -28,6 +28,8 @@ public class jdemo implements hi.servlet {
                 this.do_math(req, res);
             } else if (Pattern.matches("^/session/?$", req.uri)) {
                 this.do_session(req, res);
+            } else if (Pattern.matches("^/cache/?$", req.uri)) {
+                this.do_cache(req, res);
             } else if (Pattern.matches("^/md5/?$", req.uri)) {
                 this.do_md5(req, res);
             } else {
@@ -98,11 +100,9 @@ public class jdemo implements hi.servlet {
         String key = "test";
         int value = 0;
         if (req.session.containsKey(key)) {
-            value = Integer.parseInt(req.session.get(key));
-            res.session.put(key, String.valueOf(value + 1));
-        } else {
-            res.session.put(key, String.valueOf(value));
+            value = Integer.parseInt(req.session.get(key)) + 1;
         }
+        res.session.put(key, String.valueOf(value));
         res.content = String.format("hello,%d", value);
         res.status = 200;
     }
@@ -111,6 +111,17 @@ public class jdemo implements hi.servlet {
         String plaintext = "hello,md5!";
         res.status = 200;
         res.content = String.format("%s md5= %s", plaintext, this.md5(plaintext));
+    }
+
+    private void do_cache(hi.request req, hi.response res) {
+        String key = "cache_test";
+        int value = 0;
+        if (req.cache.containsKey(key)) {
+            value = Integer.parseInt(req.cache.get(key)) + 1;
+        }
+        res.cache.put(key, String.valueOf(value));
+        res.content = String.format("%s,%d", key, value);
+        res.status = 200;
     }
 
     private String foreach_headers(HashMap<String, String> headers) {

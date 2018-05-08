@@ -12,20 +12,22 @@ namespace hi {
 
         void handler(request& req, response& res) {
             if (req.method == "GET") {
-                if (boost::regex_match(req.uri, boost::regex("^/hello/?") )) {
+                if (boost::regex_match(req.uri, boost::regex("^/hello/?$"))) {
                     this->do_hello(req, res);
-                } else if (boost::regex_match(req.uri, boost::regex("^/empty/?"))) {
+                } else if (boost::regex_match(req.uri, boost::regex("^/empty/?$"))) {
                     this->do_empty(req, res);
-                } else if (boost::regex_match(req.uri, boost::regex("^/error/?") )) {
+                } else if (boost::regex_match(req.uri, boost::regex("^/error/?$"))) {
                     this->do_error(req, res);
-                } else if (boost::regex_match(req.uri, boost::regex("^/redirect/?"))) {
+                } else if (boost::regex_match(req.uri, boost::regex("^/redirect/?$"))) {
                     this->do_redirect(req, res);
-                } else if (boost::regex_match(req.uri, boost::regex("^/form/?") )) {
+                } else if (boost::regex_match(req.uri, boost::regex("^/form/?$"))) {
                     this->do_form(req, res);
-                } else if (boost::regex_match(req.uri, boost::regex("^/math/?"))) {
+                } else if (boost::regex_match(req.uri, boost::regex("^/math/?$"))) {
                     this->do_math(req, res);
-                } else if (boost::regex_match(req.uri, boost::regex("^/session/?"))) {
+                } else if (boost::regex_match(req.uri, boost::regex("^/session/?$"))) {
                     this->do_session(req, res);
+                } else if (boost::regex_match(req.uri, boost::regex("^/cache/?$"))) {
+                    this->do_cache(req, res);
                 } else {
                     this->do_error(req, res);
                 }
@@ -109,14 +111,23 @@ namespace hi {
             res.headers.find("Content-Type")->second = "text/plain;charset=UTF-8";
             std::string key("test");
             long i = 0;
-            if (req.session.find(key) == req.session.end()) {
-                res.session[key] = "0";
-            } else {
+            if (req.session.find(key) != req.session.end()) {
                 i = boost::lexical_cast<long>(req.session[key]) + 1;
-                res.session[key] = boost::lexical_cast<std::string>(i);
             }
+            res.session[key] = boost::lexical_cast<std::string>(i);
+            res.content = (boost::format("hello %1%,%2%") % key % i).str();
+            res.status = 200;
+        }
 
-            res.content = (boost::format("hello,%1%") % i).str();
+        void do_cache(request& req, response& res) {
+            res.headers.find("Content-Type")->second = "text/plain;charset=UTF-8";
+            std::string key("cache_test");
+            long i = 0;
+            if (req.cache.find(key) != req.cache.end()) {
+                i = boost::lexical_cast<long>(req.cache[key]) + 1;
+            }
+            res.cache[key] = boost::lexical_cast<std::string>(i);
+            res.content = (boost::format("hello %1%,%2%") % key % i).str();
             res.status = 200;
         }
 
