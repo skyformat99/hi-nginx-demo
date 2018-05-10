@@ -1,5 +1,5 @@
 
-SRC=$(wildcard *.php)
+SRC=$(shell find . -type f | egrep *.php$$)
 
 ifndef NGINX_INSTALL_DIR
 NGINX_INSTALL_DIR=/usr/local/nginx
@@ -12,7 +12,7 @@ all:
 clean:
 	@echo 'ok'
 
-install:
-	test -d $(NGINX_INSTALL_DIR)/php || mkdir -p $(NGINX_INSTALL_DIR)/php
-	install $(SRC) $(NGINX_INSTALL_DIR)/php
+install:${SRC}
+	for i in ${SRC};do test -d $(NGINX_INSTALL_DIR)/php/`dirname $$i` || mkdir -p $(NGINX_INSTALL_DIR)/php/`dirname $$i` && install $$i $(NGINX_INSTALL_DIR)/php/$$i ;done
+
 
