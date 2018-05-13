@@ -1,12 +1,26 @@
 package hi;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+
 public class jdemo implements hi.servlet {
+
+    private static ScriptEngine js_engine;
+
+    private static ScriptEngine get_js_engine_instance() {
+        if (jdemo.js_engine == null) {
+            jdemo.js_engine = new ScriptEngineManager().getEngineByName("nashorn");
+        }
+        return jdemo.js_engine;
+    }
 
     public jdemo() {
 
@@ -32,6 +46,8 @@ public class jdemo implements hi.servlet {
                 this.do_cache(req, res);
             } else if (Pattern.matches("^/md5/?$", req.uri)) {
                 this.do_md5(req, res);
+            } else if (Pattern.matches("^/js/?$", req.uri)) {
+                this.do_js(req, res);
             } else {
                 this.do_error(req, res);
             }
@@ -122,6 +138,26 @@ public class jdemo implements hi.servlet {
         res.cache.put(key, String.valueOf(value));
         res.content = String.format("%s,%d", key, value);
         res.status = 200;
+    }
+
+    private void do_js(hi.request req, hi.response res) {
+        ScriptEngine engine = jdemo.get_js_engine_instance();
+
+        engine.put("hi_req", req);
+        engine.put("hi_res", res);
+
+        try {
+            engine.eval(new java.io.FileReader("javascript/index.js"));
+        } catch (FileNotFoundException e) {
+            res.content = e.getMessage();
+            res.status = 500;
+        } catch (ScriptException e) {
+            res.content = e.getMessage();
+            res.status = 500;
+        } finally {
+
+        }
+
     }
 
     private String foreach_headers(HashMap<String, String> headers) {
