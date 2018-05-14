@@ -11,6 +11,10 @@ class ComposerStaticInit280dcfc7ccc89afaef9c53485db3eb69
     );
 
     public static $prefixLengthsPsr4 = array (
+        'h' => 
+        array (
+            'hi\\' => 3,
+        ),
         'Z' => 
         array (
             'Zend\\Stdlib\\' => 12,
@@ -28,6 +32,10 @@ class ComposerStaticInit280dcfc7ccc89afaef9c53485db3eb69
     );
 
     public static $prefixDirsPsr4 = array (
+        'hi\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src',
+        ),
         'Zend\\Stdlib\\' => 
         array (
             0 => __DIR__ . '/..' . '/zendframework/zend-stdlib/src',

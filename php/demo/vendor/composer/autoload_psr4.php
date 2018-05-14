@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'hi\\' => array($baseDir . '/src'),
     'Zend\\Stdlib\\' => array($vendorDir . '/zendframework/zend-stdlib/src'),
     'Zend\\Math\\' => array($vendorDir . '/zendframework/zend-math/src'),
     'Zend\\Crypt\\' => array($vendorDir . '/zendframework/zend-crypt/src'),

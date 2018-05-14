@@ -44,6 +44,13 @@ class demo implements \hi\servlet {
             $rs->content = $bcrypt->create($param['string']);
             $rs->status = 20;
         });
+        
+        $app->add('{/(?P<param_1>\w+)/(?P<param_2>\w+)/?}',array('GET'),function($rq,$rs,&$param){
+            $classname="hi\\". $param["param_1"]."\\". $param["param_2"];
+            $app= new $classname();
+            $app->handler($rq,$rs);
+
+        });
 
         $app->run($req, $res);
     }
