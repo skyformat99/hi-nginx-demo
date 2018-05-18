@@ -9,5 +9,3 @@ clean:
 
 install:
 	for i in $(PROJECT);do if test -f $$i/Makefile; then cd $$i && make install && cd ..;  fi; done
-	install demo.conf $(NGINX_INSTALL_DIR)/conf
-	install demo.html $(NGINX_INSTALL_DIR)/html
