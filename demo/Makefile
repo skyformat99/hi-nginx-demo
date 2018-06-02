@@ -15,7 +15,7 @@ LDFLAGS+=-shared
 all:$(PROJECT)
 
 $(PROJECT): $(OBJ)
-	$(CXX) $(CXXFLAGS) $(LDFLAGS)  $(LDLIBS) -o $@ $^
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 clean:
 	rm -f  $(OBJ) $(PROJECT)
