@@ -1,6 +1,10 @@
 
 #include "servlet.hpp"
 
+#include <utility>
+#include <vector>
+#include <functional>
+
 #include <boost/lexical_cast.hpp>
 #include <boost/format.hpp>
 #include <boost/regex.hpp>
@@ -10,26 +14,27 @@ namespace hi {
     class demo : public servlet {
     public:
 
+        demo() : uri_map() {
+            this->uri_map = {
+                {R"(^/$)", std::bind(&demo::do_error, this, std::placeholders::_1, std::placeholders::_2)},
+                {R"(^/hello/?$)", std::bind(&demo::do_hello, this, std::placeholders::_1, std::placeholders::_2)},
+                {R"(^/empty/?$)", std::bind(&demo::do_empty, this, std::placeholders::_1, std::placeholders::_2)},
+                {R"(^/error/?$)", std::bind(&demo::do_error, this, std::placeholders::_1, std::placeholders::_2)},
+                {R"(^/redirect/?$)", std::bind(&demo::do_redirect, this, std::placeholders::_1, std::placeholders::_2)},
+                {R"(^/form/?$)", std::bind(&demo::do_form, this, std::placeholders::_1, std::placeholders::_2)},
+                {R"(^/math/?$)", std::bind(&demo::do_math, this, std::placeholders::_1, std::placeholders::_2)},
+                {R"(^/session/?$)", std::bind(&demo::do_session, this, std::placeholders::_1, std::placeholders::_2)},
+                {R"(^/cache/?$)", std::bind(&demo::do_cache, this, std::placeholders::_1, std::placeholders::_2)}
+            };
+        }
+
         void handler(request& req, response& res) {
             if (req.method == "GET") {
-                if (boost::regex_match(req.uri, boost::regex("^/hello/?$"))) {
-                    this->do_hello(req, res);
-                } else if (boost::regex_match(req.uri, boost::regex("^/empty/?$"))) {
-                    this->do_empty(req, res);
-                } else if (boost::regex_match(req.uri, boost::regex("^/error/?$"))) {
-                    this->do_error(req, res);
-                } else if (boost::regex_match(req.uri, boost::regex("^/redirect/?$"))) {
-                    this->do_redirect(req, res);
-                } else if (boost::regex_match(req.uri, boost::regex("^/form/?$"))) {
-                    this->do_form(req, res);
-                } else if (boost::regex_match(req.uri, boost::regex("^/math/?$"))) {
-                    this->do_math(req, res);
-                } else if (boost::regex_match(req.uri, boost::regex("^/session/?$"))) {
-                    this->do_session(req, res);
-                } else if (boost::regex_match(req.uri, boost::regex("^/cache/?$"))) {
-                    this->do_cache(req, res);
-                } else {
-                    this->do_error(req, res);
+                for (auto& item : this->uri_map) {
+                    if (boost::regex_match(req.uri, boost::regex(item.first))) {
+                        item.second(req, res);
+                        break;
+                    }
                 }
             } else if (req.method == "POST" && boost::regex_match(req.uri, boost::regex("^/form/?"))) {
                 this->do_form(req, res);
@@ -130,6 +135,8 @@ namespace hi {
             res.content = (boost::format("hello %1%,%2%") % key % i).str();
             res.status = 200;
         }
+    private:
+        std::vector<std::pair<std::string, std::function<void(hi::request&, hi::response&) >>> uri_map;
 
     };
 }
