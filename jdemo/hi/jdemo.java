@@ -5,11 +5,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import javax.script.CompiledScript;
+import javax.script.Compilable;
 
 public class jdemo implements hi.servlet {
 
@@ -147,7 +151,13 @@ public class jdemo implements hi.servlet {
         engine.put("hi_res", res);
 
         try {
-            engine.eval(new java.io.FileReader("javascript/index.js"));
+            if (engine instanceof javax.script.Compilable) {
+                javax.script.Compilable c = (javax.script.Compilable) engine;
+                javax.script.CompiledScript cs = c.compile(new java.io.FileReader("javascript/index.js"));
+                cs.eval();
+            } else {
+                engine.eval(new java.io.FileReader("javascript/index.js"));
+            }
         } catch (FileNotFoundException e) {
             res.content = e.getMessage();
             res.status = 500;
